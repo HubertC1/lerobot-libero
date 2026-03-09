@@ -41,33 +41,33 @@ This repository started as a fork of the official LIBERO benchmark
 - [Citation](#Citation)
 - [License](#License)
 
-# Installtion
+# Installation
 
-Please run the following commands in the given order to install the dependency for **LIBERO**.
+Use this flow when you need LIBERO in a Python 3.12 JEPA environment (without downgrading Torch).
 
-```
-/home/hubertchang/miniconda3/envs/vjepa2_libero/bin/python -m pip install -r requirements.txt
-```
+```bash
+# activate your target conda env (example)
+conda activate vjepa2_libero
 
-```
-conda create -n libero python=3.8.13
-conda activate libero
-git clone https://github.com/Lifelong-Robot-Learning/LIBERO.git
-cd LIBERO
-pip install -r requirements.txt
-pip install torch==1.11.0+cu113 torchvision==0.12.0+cu113 torchaudio==0.11.0 --extra-index-url https://download.pytorch.org/whl/cu113
-```
+# from this repo root
+python -m pip install --upgrade pip setuptools wheel
+CMAKE_POLICY_VERSION_MINIMUM=3.5 python -m pip install -r requirements.txt
 
-Then install the `libero` package:
-
-```
-cd ~/p-jepa/MPC/lerobot-libero
-PATH="/usr/bin:$PATH" CMAKE_POLICY_VERSION_MINIMUM=3.5 \
-/home/hubertchang/miniconda3/envs/vjepa2_libero/bin/python -m pip install -e .
+# install editable package
+CMAKE_POLICY_VERSION_MINIMUM=3.5 python -m pip install -e .
 ```
 
-```
-pip install -e .
+Notes:
+
+- Do not run plain `pip ...`; always use `python -m pip ...` from the activated env.
+- The old LIBERO Torch pin (`torch==1.11.0+cu113`) is for legacy stacks and may conflict with JEPA.
+- If you hit `ModuleNotFoundError: No module named 'cmake'` while building `egl_probe`, your env has a broken `cmake` launcher. Fix and retry:
+
+```bash
+conda activate vjepa2_libero
+python -m pip uninstall -y cmake
+rm -f "$(python -c 'import os,sys; print(os.path.join(os.path.dirname(sys.executable), "cmake"))')"
+CMAKE_POLICY_VERSION_MINIMUM=3.5 python -m pip install -e .
 ```
 
 # Datasets
